@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Test Results</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+	<link rel="icon" type="image/png" href="https://tusharneje.online/examhub/ExamHub_Logo%5BICON%5D.png">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			overflow-y: scroll;
+		}
+
+		a {
+			text-decoration: none;
+		}
+
+		ul {
+			list-style-type: none;
+		}
+
+		body {
+			font-family: "Outfit", sans-serif;
+			background: #121225;
+			color: #ffffff;
+		}
+
+		.radio-section {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100%;
+			flex-direction: column;
+			/* Ensure content is stacked vertically */
+		}
+
+		h1 {
+			margin-bottom: 20px;
+			text-align: center;
+			/* Align text to the center */
+			font-size: 32px;
+		}
+
+		.table-container {
+			margin-top: 20px;
+		}
+
+		table {
+			width: 100%;
+			/* Increased the table width */
+			text-align: center;
+			margin: auto;
+		}
+
+		td,
+		th {
+			padding: 35px;
+			/* Increased padding for cells */
+			color: white;
+			font-size: 20px;
+			/* Increased font size */
+		}
+
+		th {
+			background-color: #524eee;
+		}
+
+		td {
+			background-color: #1d1d42;
+		}
+
+		.percentage-row {
+			background-color: #1d1d42;
+			font-size: 22px;
+			font-weight: bold;
+			text-align: center;
+			color: white;
+		}
+
+		.button-container {
+			margin-top: 1rem;
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.btn {
+			padding: 10px 20px;
+			background-color: #524eee;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			margin-right: 200;
+			align-items: center;
+			font-size: 1rem;
+			padding: 1.5rem;
+			transition: background-color 0.3s ease;
+		}
+
+		.btn:hover {
+			background-color: #3e3eb1;
+		}
+
+		.btn-logout {
+			background-color: #ee4e4e;
+		}
+
+		.btn-logout:hover {
+			background-color: #b13e3e;
+
+		}
+	</style>
+</head>
+
+<body>
+	<section class="radio-section">
+		<h1 style="margin-top: 3rem;">Congrats! You have successfully completed the Test!!</h1>
+		<div class="table-container">
+			<table>
+				<tr>
+					<th>Total Marks</th>
+					<th>Obtained Marks</th>
+				</tr>
+				<tr>
+					<td>{{total_of}}</td>
+					<td>{{obtained}}</td>
+				</tr>
+				<tr class="percentage-row">
+					<td colspan="2">Percentage: {{per}}%</td>
+				</tr>
+			</table>
+			<br>
+			<div class="button-container" style="margin-bottom: 3rem;">
+				<button class="btn" onclick="toogleTable()" id="toogBtn">Show Detailed Report &nbsp;<i
+						class="fa-solid fa-chevron-up fa-flip-vertical"></i></button>
+				<button class="btn btn-logout" onclick="window.location.href='/logout/'">Logout &nbsp;<i
+						class="fa-solid fa-arrow-right-from-bracket"></i></button>
+			</div>
+			<table id="detailrepo" style="display: none; margin-bottom: 3rem">
+				<tr>
+					<th>Question No.</th>
+					<th>Your Answer</th>
+					<th>Correct/Wrong</th>
+					<th>Marks</th>
+				</tr>
+				{% for row in end_data %}
+				<tr>
+					{% for data in row %}
+					{% if data == 1 %}
+					<td style="font-size: 1.7rem; color: rgb(34, 226, 34);"><i class="fa-solid fa-circle-check"></i>
+					</td>
+					{% elif data == -1 %}
+					<td style="font-size: 1.7rem; color: rgb(226, 34, 34);"><i class="fa-solid fa-circle-xmark"></i>
+					</td>
+					{% elif data == '-' %}
+					<td style="color: rgb(226, 34, 34);">N/A</td>
+					{% else %}
+					<td>{{data}}</td>
+					{% endif %}
+					{% endfor %}
+				</tr>
+				{% endfor %}
+				<tr>
+					<td>Total Q. {{totalQues}}</td>
+					<td colspan="2"> - </td>
+					<td> {{obtained}} </td>
+				</tr>
+			</table>
+		</div>
+
+	</section>
+
+	<script>
+		function toogleTable() {
+			let elem = document.getElementById('detailrepo');
+			let togbtn = document.getElementById('toogBtn');
+			if (elem.style.display == 'none') {
+				elem.style.display = ''
+				togbtn.innerHTML = 'Hide Detailed Report &nbsp;<i class="fa-solid fa-chevron-up"></i>'
+			}
+			else {
+				console.log("Here")
+				elem.style.display = 'none'
+				togbtn.innerHTML = 'Show Detailed Report &nbsp;<i class="fa-solid fa-chevron-up fa-flip-vertical"></i>'
+
+			}
+		}
+
+		window.history.pushState(null, null, window.location.href);
+
+		window.onpopstate = function () {
+			window.history.go(1);
+		};
+
+	</script>
+</body>
+
+</html>

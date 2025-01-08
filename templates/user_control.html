@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamHub | User Control</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+	<link rel="icon" type="image/png" href="https://tusharneje.online/examhub/ExamHub_Logo%5BICON%5D.png">
+    <style>
+        body {
+            background-color: #19123B;
+            color: #fff;
+            font-family: "Outfit", sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            width: 90%; /* Increased width */
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 100px;
+        }
+        h2 {
+            text-align: center;
+            margin-top: 25px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            display: inline-block;
+            width: 150px;
+            font-size: 22px; 
+        }
+        input[type="text"],
+        input[type="password"],
+        select {
+            background-color: #212042;
+            color: #fff;
+            border: 1px solid #57557A;
+            padding: 15px; /* Increased padding */
+            width: 300px; /* Increased width */
+            margin-right: 10px;
+            border-radius: 5px;
+            font-size: 16px; /* Increased font size */
+        }
+        button {
+            background: linear-gradient(135deg, rgba(176,106,252,1) 39%, rgba(116,17,255,1) 101%);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px; /* Increased padding */
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px; /* Increased font size */
+            margin-left: 2%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #fff;
+            padding: 15px; /* Increased padding */
+            text-align: left;
+        }
+        th {
+            background-color: #57557A;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fa-solid fa-user-group"></i> &nbsp;User Control</h1>
+        
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Enter username">
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Enter password">
+        </div>
+
+        <div class="form-group">
+            <label for="role">Role</label>
+            <select id="role">
+                <option value="STD">Student</option>
+                <option value="TEC">Teacher</option>
+            </select>
+            <button id="createUser" onclick="createUser()">Create</button>
+        </div>
+
+        <hr style="border: 1px solid #57557A; margin: 30px 0;">
+
+        <div class="form-group">
+            <label for="deleteDropdown">Select User</label>
+            <select id="deleteUser">
+                {% for item in usernames %}
+                    <option value="{{item}}">{{item}}</option>
+                {% endfor %}
+            </select>
+            <button id="deleteUser" onclick="deleteUser()">Delete User</button>
+        </div>
+
+        <h2>All Users</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data %}
+                    <tr>
+                        {% for data in item %}
+                            {% if data == 'TEC' %}
+                                <td><i class="fa-solid fa-user-lock"></i> {{data}}</td>
+                            {% elif data == 'STD' %}
+                                <td><i class="fa-solid fa-user-graduate"></i> {{data}}</td>
+                            {% else %}
+                                <td>{{data}}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <center>
+            <button id="deleteUser" style="margin-top: 2rem;" onclick="window.location.href='/teacher_workspace/'">Back to Dashboard</button>
+        </center>
+
+    </div>
+</body>
+<script>
+    function createUser() {
+        const url = '/createUser/';
+        let username = document.getElementById('username').value;
+        let password = document.getElementById('password').value;
+        let role = document.getElementById('role').value;
+        const data = {
+            uname : username,
+            passwd : password,
+            userrole : role,
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(jsonData => {
+                if(jsonData.acc){
+                    alert('New User Created Successfully!');
+                    window.location.reload(true);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+    function deleteUser() {
+        const url = '/deleteUser/';
+        let username = document.getElementById('deleteUser').value;
+        const data = {
+            deluname : username,
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(jsonData => {
+                if(jsonData.acc){
+                    alert('User Deleted Sucessfully!');
+                    window.location.reload(true);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+</html>

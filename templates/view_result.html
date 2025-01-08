@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ExamHub | View Result</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+	<link rel="icon" type="image/png" href="https://tusharneje.online/examhub/ExamHub_Logo%5BICON%5D.png">
+
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		a {
+			text-decoration: none;
+		}
+
+		ul {
+			list-style-type: none;
+		}
+
+		body {
+			font-family: "Outfit", sans-serif;
+			background-color: rgb(19, 18, 21);
+			color: #ffffff;
+		}
+
+		.radio-section {
+			display: flex;
+			/* align-items: center; */
+			justify-content: center;
+			height: 100vh;
+			flex-direction: column;
+			/* Ensure content is stacked vertically */
+		}
+
+		h1 {
+			margin-bottom: 20px;
+			text-align: center;
+			/* Align text to the center */
+			font-size: 32px;
+		}
+
+		/* Container for dropdown and button */
+		.dropdown-button-container {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
+		}
+
+		button {
+			margin: 10px;
+		}
+
+		select {
+			width: 300px;
+			/* Increased width */
+			padding: 10px;
+			font-size: 16px;
+			border: 2px solid rgba(255, 255, 255, 0.1);
+			border-radius: 8px;
+			background-color: #1d1d42;
+			color: white;
+			cursor: pointer;
+		}
+
+		select:focus {
+			outline: none;
+			border-color: #524eee;
+		}
+
+		button {
+			padding: 10px 20px;
+			font-size: 16px;
+			background-color: #524eee;
+			color: white;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		button:hover {
+			background-color: #3d3dcf;
+		}
+
+		button:focus {
+			outline: none;
+		}
+
+		/* Table styling */
+		table {
+			width: 80%;
+			margin-top: 40px;
+			border-collapse: collapse;
+			text-align: center;
+		}
+
+		table,
+		th,
+		td {
+			border: 2px solid white;
+			padding: 10px;
+			text-align: left;
+		}
+
+		th {
+			background-color: #524eee;
+			color: white;
+		}
+
+		td {
+			background-color: #1d1d42;
+			color: white;
+		}
+
+		#sbtn {
+			background-color: #4CAF50; /* Green background */
+			border: none;              /* Remove border */
+			color: white;              /* White text */
+			padding: 10px 20px;        /* Some padding */
+			text-align: center;        /* Centered text */
+			text-decoration: none;     /* Remove underline */
+			display: inline-block;     /* Make the button inline */
+			font-size: 16px;           /* Set a font size */
+			margin: 5px 2px;           /* Some margin */
+			cursor: pointer;           /* Pointer/hand icon */
+			border-radius: 5px;        /* Rounded corners */
+			transition-duration: 0.4s; /* Animation speed */
+		}
+		
+		#sbtn:hover {
+			background-color: #2f7132;
+		}
+		
+	</style>
+	
+</head>
+
+<body>
+	<section class="radio-section">
+		<h1>Select Test Code to View the Test Results</h1>
+		<div class="dropdown-button-container">
+			<!-- Dropdown -->
+			<form action="/view_result/" method="post">
+				{% csrf_token %}
+				<select id="dropdown" name="testcode">
+					<option value="" disabled selected>Select Test Code</option>
+					{% for i,j in test_data %}
+					<option value="{{i}}">{{i}} : {{j}}</option>
+
+					{% endfor %}
+				</select>
+				<button id="submit-btn">View Test Result</button>
+			</form>
+		</div>
+
+		<style>
+			#printpaper {
+				width: 100%;
+				align-items: center;
+				justify-content: center;
+			}
+		</style>
+		<!-- Table -->
+		{% if postData %}
+		<center>
+			<div id="printpaper">
+				<table>
+					<thead>
+						<tr>
+							<th>Username</th>
+							<th>Marks Obtained</th>
+							<th>Performance in (%)</th>
+							<th>Test Submited On</th>
+							<th>Detailed Report</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for row in data %}
+						<tr>
+							<td>{{row.0}}</td>
+							<td>{{row.1}}</td>
+							<td>{{row.2}}</td>
+							<td>{{row.3}}</td>
+							<td>
+								<form action="/detailed_report/" method="post">
+									{% csrf_token %} 
+									<input type="text" name="sid" id="sid" value="{{row.4}}" hidden>
+									<input type="submit" name="View Report" id="sbtn" value="View Report">
+								</form>
+
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</center>
+		<center>
+            <br>
+			<button style="width: 160px;" onclick="printQpaper()">
+				Print Result
+			</button>
+			<button style="width: 160px;" onclick="window.location.href='/teacher_workspace/'">
+				Dashboard
+			</button>
+		</center>
+		{% endif %}
+
+	</section>
+
+	<script>
+
+		function printQpaper() {
+			// Create a new window
+			data = document.getElementById('printpaper').innerHTML
+			var newWindow = window.open('', '', 'width=800,height=600');
+
+			// Write content to the new window
+			newWindow.document.write('<html><head><title>Print Preview</title></head><body>');
+			newWindow.document.write(`
+			<style>
+				table {
+					width: 100%;
+					border-collapse: collapse;
+					margin-bottom: 20px;
+					background-color: #fff;
+					box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+				}
+				th, td {
+					padding: 12px 15px;
+					border: 1px solid #ddd;
+					text-align: left;
+				}
+				th {
+					background-color: #4CAF50;
+					color: white;
+					text-transform: uppercase;
+				}
+				tr:nth-child(even) {
+					background-color: #f2f2f2;
+				}
+				tr:hover {
+					background-color: #f1f1f1;
+				}
+				td {
+					font-size: 16px;
+					color: #333;
+				}
+				caption {
+					margin-bottom: 10px;
+					font-size: 20px;
+					font-weight: bold;
+					color: #555;
+				}
+
+			</style>
+			
+			`);
+			newWindow.document.write(data);
+			newWindow.document.write('</body></html>');
+
+			// Close the document to finish rendering the content
+			newWindow.document.close();
+
+			// Wait for the content to load and then trigger the print dialog
+			newWindow.onload = function () {
+				newWindow.focus();
+				newWindow.print();
+			};
+		}
+
+	</script>
+</body>
+
+</html>

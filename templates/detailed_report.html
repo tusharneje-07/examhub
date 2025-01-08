@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Test Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h2 {
+            color: #333;
+            margin: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #2f406f;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        /* Table container styling */
+        .table-container {
+            margin-bottom: 40px;
+        }
+
+        /* Print button styling */
+        .print-btn {
+            background-color: #2f406f;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .print-btn:hover {
+            background-color: #2f406f;
+        }
+    </style>
+</head>
+
+<body>
+    <table style="text-align: center;">
+        <th style="text-align: center;">
+            <img height="35" src="https://tusharneje.online/examhub/ExamHub_Logo_Horzo.png" alt="ExamHub">
+        </th>
+        <th style="text-align: center; color: white;">
+            <h2 style="color: white;">Test Detailed Report</h2>
+        </th>
+    </table>
+    <!-- Table 1: Student Test Details -->
+    <div class="table-container">
+    <h2>Student & Test Details</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Username</th>
+                    <th>Test ID</th>
+                    <th>Marks Obtained</th>
+                    <th>Performance in (%)</th>
+                    <th>Submit Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{std_data.0}}</td>
+                    <td>{{tid}}</td>
+                    <td>{{std_data.1}}</td>
+                    <td>{{std_data.2}}%</td>
+                    <td>{{std_data.3}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>Question Details</h2>
+
+    <!-- Table 2: Question Details -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th style="text-align: center;">Question</th>
+                    <th style="text-align: center;">Op. A</th>
+                    <th style="text-align: center;">Op. B</th>
+                    <th style="text-align: center;">Op. C</th>
+                    <th style="text-align: center;">Op. D</th>
+                    <th style="text-align: center;">Correct Op.</th>
+                    <th style="text-align: center;">Student Answer</th>
+                    <th style="text-align: center;">Result</th>
+                    <th style="text-align: center;">Mark</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    {% for i in row %}
+                        {% if i == ' 1 ' %}
+                            <td>
+                                <b>
+                                    Correct
+                                </b>
+                            </td>
+                        {% elif i == ' -1 ' %}
+                            <td>
+                                Wrong
+                            </td>
+                        {% elif i == ' - ' %}
+                            <td>
+                                NA 
+                            </td>
+                        {% else %}
+                            <td>
+                                {{i}}
+                            </td>
+                        {% endif %}
+
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="7"></td>
+                    <td colspan="2" style="text-align: center;">
+                        <span style="font-size: 1.2rem;">
+                            <b>Total - {{std_data.1}} </b>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    <button class="print-btn" id="printbtn" onclick="printReport()">Print Report</button>
+
+    </div>
+
+    <script>
+        function printReport() {
+            document.getElementById('printbtn').style.display = 'none';
+            window.print();
+            document.getElementById('printbtn').style.display = '';
+        }
+    </script>
+
+</body>
+
+</html>

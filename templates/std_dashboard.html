@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamHub | Student Dashboard</title>
+    <link rel="icon" type="image/png" href="https://tusharneje.online/examhub/ExamHub_Logo%5BICON%5D.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: #1a1a2e;
+            --color: #ffffff;
+            --primary-color: #0f3460;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            box-sizing: border-box;
+            font-family: "Outfit", sans-serif;
+            background: var(--background);
+            color: var(--color);
+            letter-spacing: 1px;
+            transition: background 0.2s ease;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--color);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            position: relative;
+            width: 22.2rem;
+        }
+
+        .form-container {
+            border: 1px solid hsla(0, 0%, 65%, 0.158);
+            box-shadow: 0 0 36px 1px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            backdrop-filter: blur(20px);
+            z-index: 99;
+            padding: 2rem;
+        }
+
+        .login-container select,
+        .login-container button {
+            display: block;
+            padding: 14.5px;
+            width: 100%;
+            margin: 2rem 0;
+            color: var(--color);
+            border: none;
+            border-radius: 5px;
+            font-weight: 500;
+            letter-spacing: 0.8px;
+            font-size: 15px;
+            backdrop-filter: blur(15px);
+        }
+
+        .login-container select {
+            background-color: #0f3460;
+            /* Black shade for the dropdown */
+        }
+
+        .login-container button {
+            background-color: var(--primary-color);
+            color: var(--color);
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.1s ease-in-out;
+        }
+
+        .login-container button:hover {
+            box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.15);
+            transform: scale(1.02);
+        }
+
+        .circle {
+            width: 8rem;
+            height: 8rem;
+            background: var(--primary-color);
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .circle-one {
+            top: 0;
+            left: 0;
+            z-index: -1;
+            transform: translate(-45%, -45%);
+        }
+
+        .circle-two {
+            bottom: 0;
+            right: 0;
+            z-index: -1;
+            transform: translate(45%, 45%);
+        }
+
+        .theme-btn-container {
+            position: absolute;
+            left: 0;
+            bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="container">
+        <div class="login-container">
+            <div class="circle circle-one"></div>
+            <div class="form-container">
+                <div style="text-align: center;">
+                    <img src="https://tusharneje.online/examhub/wave.gif" alt="HelloWave" height="70" width="70">
+                </div>
+                <h1 class="opacity" style="margin: 0px;">
+                    Welcome Student!</h1>
+                <form action="/solvetest/" method="post">
+                    {% csrf_token %}
+                    <select name="testcode">
+                        <option value="NONE" disabled selected>Select Test Code</option>
+                        {% for i,j in test_data %}
+                        <option value="{{i}}">{{i}} : {{j}}</option>
+                        {% endfor %}
+                    </select>
+
+                    <button type="submit" class="opacity">START TEST</button>
+                </form>
+            </div>
+            <div class="circle circle-two"></div>
+        </div>
+        <div class="theme-btn-container"></div>
+    </section>
+</body>
+
+</html>

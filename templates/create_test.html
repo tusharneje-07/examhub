@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamHub | Create/Edit Test</title>
+    <link rel="icon" type="image/png" href="https://tusharneje.online/examhub/ExamHub_Logo%5BICON%5D.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #19123B;
+            color: #fff;
+            height: 100%;
+            /* Increased height of the body */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-direction: column;
+            padding: 20px;
+            /* margin-top: 10px; Shift all content 40px down */
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            margin-top: 10px;
+        }
+
+        label {
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .form-control {
+            background-color: #212042;
+            color: #fff;
+            border: 1px solid #57557A;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(176, 106, 252, 1) 39%, rgba(116, 17, 255, 1) 101%);
+            border: none;
+            border-radius: 50px;
+            width: 100%;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .section-divider {
+            border-top: 2px solid #57557A;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .center-button {
+            background: linear-gradient(135deg, rgba(176, 106, 252, 1) 39%, rgba(116, 17, 255, 1) 101%);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 30px;
+            color: #fff;
+        }
+
+        .new-dropdown {
+            margin: 10px auto;
+            width: 100%;
+            position: relative;
+            text-align: center;
+        }
+
+        .new-dropdown select {
+            width: 100%;
+            padding: 10px;
+            background-color: #9b9b9f;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><path fill="%23fff" d="M0 2.5l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 10px;
+        }
+
+        .table-bordered td,
+        .table-bordered th {
+            border: 1px solid #fff !important;
+        }
+
+        .center-table {
+            width: 100%;
+        }
+
+        /* Move the heading down */
+        .heading {
+            margin-top: 50px;
+            /* Adjust the value to move it further down */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <p class="text-center mb-3 mt-2 heading" style="font-size: 2rem; font-weight: 600;">Create Test</p>
+
+    <div class="row" style="width: 100%;">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="input1">Enter Test Name:</label>
+                <input type="text" class="form-control" id="test_name" placeholder="Test Name">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="input2">Enter Test ID:</label>
+                <input type="text" class="form-control" id="test_id" placeholder="Test ID">
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="width: 100%;">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="input4">Enter Question Weight:</label>
+                <input type="number" class="form-control" id="test_weight" placeholder="Question Weight">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="input4"></label>
+                <button type="button" class="btn btn-primary" onclick="create_new_test()">Create Test</button>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h5>OR</h5>
+            <label for="correctOption" style="color: #d5c1c1;">Select Test to Edit</label>
+            <select class="form-control" id="edit_test_id">
+                {% for i,j in test_data %}
+                <option value="{{i}}">{{i}} : {{j}}</option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="col-md-6 mt-3">
+            <div class="form-group">
+                <label for="input4"></label>
+                <button type="button" class="btn btn-primary" onclick="edit_test()">Edit Test</button>
+            </div>
+        </div>
+        <div class="col-md-3" style="margin-top: 0px;">
+            <div class="form-group">
+                <label for="input4"></label>
+                <button type="button" class="btn btn-primary" onclick="window.location.href='/teacher_workspace/'">Back To Dashboard</button>
+            </div>
+        </div>
+    </div>
+    
+
+
+    <div class="section-divider"></div>
+    <b><h3 id="test_heads"></h3></b>
+    <div class="form-group" style="width: 100%;" id="ques1">
+        <label for="input5">Question</label>
+        <input type="text" class="form-control" id="newques" placeholder="Enter Question">
+    </div>
+
+    <div class="row" style="width: 100%;" id="ques2">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="input6">Option A</label>
+                <input type="text" class="form-control" id="newA" placeholder="Enter Option A">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="input7">Option B</label>
+                <input type="text" class="form-control" id="newB" placeholder="Enter Option B">
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="width: 100%;" id="ques3">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="input8">Option C</label>
+                <input type="text" class="form-control" id="newC" placeholder="Enter Option C">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="input9">Option D</label>
+                <input type="text" class="form-control" id="newD" placeholder="Enter Option D">
+            </div>
+        </div>
+    </div>
+
+    <div class="new-dropdown" id="ques4">
+        <label for="correctOption" style="color: #d5c1c1;">Correct Option</label>
+        <select class="form-control" id="newCROP">
+            <option value="A">Option A</option>
+            <option value="B">Option B</option>
+            <option value="C">Option C</option>
+            <option value="D">Option D</option>
+        </select>
+    </div>
+
+    <div class="btn-center" style="width: 100%;" id="ques7">
+        <button type="button" class="center-button" onclick="add_new_question()">Add Question</button>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Time Table Section -->
+    <p class="text-center mb-3 mt-2" style="font-size: 2rem; font-weight: 600;" id="ques5">Question Paper</p>
+    <div class="center-table" id="ques6">
+        <table class="table table-bordered text-center" id="quizTable" style="color: white;">
+            
+        </table>
+    </div>
+
+</body>
+<script>
+    function create_new_test() {
+        const url = '/create_new_test/';
+        let name = document.getElementById('test_name').value;
+        let id = document.getElementById('test_id').value;
+        let weight = document.getElementById('test_weight').value;
+        const data = {
+            test_name: name,
+            test_id: id,
+            test_weight: weight,
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(jsonData => {
+                if (jsonData.state) {
+                    alert(`Test ${jsonData.test_id} - ${jsonData.test_name} is Created Successfully!`)
+                    document.getElementById('ques1').style.display = '';
+                    document.getElementById('ques2').style.display = '';
+                    document.getElementById('ques3').style.display = '';
+                    document.getElementById('ques4').style.display = '';
+                    document.getElementById('ques5').style.display = '';
+                    document.getElementById('ques6').style.display = '';
+                    document.getElementById('ques7').style.display = '';
+                }
+                else {
+                    alert(`Test with same name and id is already exists!`);
+                    document.getElementById('ques1').style.display = 'none';
+                    document.getElementById('ques2').style.display = 'none';
+                    document.getElementById('ques3').style.display = 'none';
+                    document.getElementById('ques4').style.display = 'none';
+                    document.getElementById('ques5').style.display = 'none';
+                    document.getElementById('ques6').style.display = 'none';
+                    document.getElementById('ques7').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+    
+    function edit_test() {
+        const url = '/edit_test/';
+        let edit_test_id = document.getElementById('edit_test_id').value;
+        const data = {
+            edit_test_id: edit_test_id,
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(jsonData => {
+                if (jsonData.state) {
+                    document.getElementById('test_heads').innerHTML = ` Editing Test - ${jsonData.test_id}`
+                    document.getElementById('ques1').style.display = '';
+                    document.getElementById('ques2').style.display = '';
+                    document.getElementById('ques3').style.display = '';
+                    document.getElementById('ques4').style.display = '';
+                    document.getElementById('ques5').style.display = '';
+                    document.getElementById('ques6').style.display = '';
+                    document.getElementById('ques7').style.display = '';
+                    refresh_table()
+                }
+                else {
+                    alert(`Test with same name and id is already exists!`);
+                    document.getElementById('ques1').style.display = 'none';
+                    document.getElementById('ques2').style.display = 'none';
+                    document.getElementById('ques3').style.display = 'none';
+                    document.getElementById('ques4').style.display = 'none';
+                    document.getElementById('ques5').style.display = 'none';
+                    document.getElementById('ques6').style.display = 'none';
+                    document.getElementById('ques7').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+    }
+    
+    function refresh_table() {
+        const url = '/refresh_table/';
+        const data = {
+            
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(jsonData => {
+                let data = jsonData.data;
+                if(jsonData.state){
+                    const table = document.getElementById('quizTable');
+
+                    // Clear existing table content
+                    table.innerHTML = '';
+
+                    // Create table headers
+                    const headerRow = document.createElement('tr');
+                    const headers = ["Question", "Option 1", "Option 2", "Option 3", "Option 4", "Answer"];
+                    headers.forEach(headerText => {
+                        const header = document.createElement('th');
+                        header.textContent = headerText;
+                        headerRow.appendChild(header);
+                    });
+                    table.appendChild(headerRow);
+
+                    // Populate the table with quiz data
+                    data.forEach(rowData => {
+                        const row = document.createElement('tr');
+                        rowData.forEach(cellData => {
+                            const cell = document.createElement('td');
+                            cell.textContent = cellData;
+                            row.appendChild(cell);
+                        });
+                        table.appendChild(row);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+    }
+    
+    function add_new_question() {
+        const url = '/add_new_question/';
+        let ques = document.getElementById('newques').value;
+        let newA = document.getElementById('newA').value;
+        let newB = document.getElementById('newB').value;
+        let newC = document.getElementById('newC').value;
+        let newD = document.getElementById('newD').value;
+        let newCROP = document.getElementById('newCROP').value;
+        const data = {
+            newques : ques,
+            newA : newA,
+            newB : newB,
+            newC : newC,
+            newD : newD,
+            newCROP : newCROP,
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(jsonData => {
+                if(jsonData.state){
+                    refresh_table()
+                }
+                else{
+                    alert('Error While Adding New Question');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    document.getElementById('ques1').style.display = 'none';
+    document.getElementById('ques2').style.display = 'none';
+    document.getElementById('ques3').style.display = 'none';
+    document.getElementById('ques4').style.display = 'none';
+    document.getElementById('ques5').style.display = 'none';
+    document.getElementById('ques6').style.display = 'none';
+    document.getElementById('ques7').style.display = 'none';
+
+</script>
+
+</html>

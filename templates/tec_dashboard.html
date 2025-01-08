@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ExamHub | Teacher Dashboard</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+	<link rel="icon" type="image/png" href="https://tusharneje.online/examhub/ExamHub_Logo%5BICON%5D.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		a {
+			text-decoration: none;
+		}
+
+		ul {
+			list-style-type: none;
+		}
+
+		body {
+			font-family: "Outfit", sans-serif;
+			background-color: rgb(19, 18, 21);
+			color: #ffffff;
+		}
+
+		.radio-section {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100vh;
+			flex-direction: column;
+			/* Ensure content is stacked vertically */
+		}
+
+		h1 {
+			margin-bottom: 20px;
+			text-align: center;
+			/* Align text to the center */
+			font-size: 32px;
+		}
+
+		.radio-list {
+			display: flex;
+			flex-direction: row;
+			/* Arrange items horizontally */
+			align-items: center;
+			/* Centering the content horizontally */
+			justify-content: center;
+			/* Centering the content vertically */
+			gap: 20px;
+			/* Adding space between the buttons */
+		}
+
+		.radio-item button {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 20px 60px;
+			background: #1d1d42;
+			border: 2px solid rgba(255, 255, 255, 0.1);
+			border-radius: 8px;
+			cursor: pointer;
+			font-size: 18px;
+			font-weight: 400;
+			min-width: 250px;
+			white-space: nowrap;
+			position: relative;
+			transition: 0.4s ease-in-out 0s;
+			color: white;
+		}
+
+		.radio-item button:hover {
+			background: #524eee;
+		}
+
+		.radio-item button:focus {
+			border-color: #524eee;
+			outline: none;
+		}
+
+		.radio-item svg {
+			margin-right: 10px;
+			fill: none;
+			stroke: currentColor;
+			width: 24px;
+			height: 24px;
+		}
+
+		.radio-item span {
+			font-size: 18px;
+			font-weight: 400;
+			color: white;
+		}
+		.logout-btn {
+            position: fixed;
+            bottom: 1.7rem;   /* Adjust distance from bottom */
+            right: 1.7rem;    /* Adjust distance from right */
+            background-color: #ff4757;  /* Initial background color */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);  /* Adds some shadow */
+        }
+
+        /* Hover effect */
+        .logout-btn:hover {
+            background-color: #962a33; /* Darker shade on hover */
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* Deeper shadow on hover */
+        }
+
+        /* Optional: active state when the button is clicked */
+        .logout-btn:active {
+            background-color: #ff6b81; /* Lighter shade on active */
+            transform: scale(0.98);    /* Small scale effect on click */
+        }
+	</style>
+</head>
+
+<body>
+	<section class="radio-section">
+		<h1>Hello Teacher!!</h1> <!-- Title placed outside radio-list -->
+		<div class="radio-list">
+			<div class="radio-item" onclick="window.location.href='/create_test/'">
+				<button id="btn1">
+					<!-- Create Test SVG -->
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+						stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3"
+						viewBox="0 0 24 24">
+						<path d="M12 20h9"></path>
+						<path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+					</svg>
+					<span>Create a new Test</span>
+				</button>
+			</div>
+			<div class="radio-item">
+				<button id="btn2" onclick="window.location.href='/view_test/'">
+					<!-- View Tests SVG -->
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+						stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"
+						viewBox="0 0 24 24">
+						<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+						<circle cx="12" cy="12" r="3"></circle>
+					</svg>
+					<span>View Test</span>
+				</button>
+			</div>
+			<div class="radio-item">
+				<button id="btn3" onclick="window.location.href='/view_result/'">
+					<!-- Results SVG -->
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+						stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+						class="feather feather-bar-chart" viewBox="0 0 24 24">
+						<line x1="12" y1="20" x2="12" y2="10"></line>
+						<line x1="18" y1="20" x2="18" y2="4"></line>
+						<line x1="6" y1="20" x2="6" y2="16"></line>
+					</svg>
+					<span>View Result</span>
+				</button>
+			</div>
+			<div class="radio-item">
+				<button id="btn3" onclick="window.location.href='/user_control/'">
+					<!-- Results SVG -->
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+						stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"
+						viewBox="0 0 24 24">
+						<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+						<circle cx="12" cy="7" r="4"></circle>
+					</svg>
+
+
+					<span>User Control</span>
+				</button>
+			</div>
+		</div>
+		<button class="logout-btn" onclick="window.location.href='/logout/'">Logout &nbsp;<i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+	</section>
+</body>
+
+</html>
