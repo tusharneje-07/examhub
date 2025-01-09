@@ -1,0 +1,41 @@
+---
+services:
+  db:
+    container_name: mysql
+    image: "mysql:latest"
+    env_file:
+      - .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
+      - MYSQL_DATABASE=${DATABASE_NAME}
+    volumes:
+      - db_data:/var/lib/mysql # Use the standard MySQL data directory
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  app:
+    container_name: ExamHub
+    image: "examhub:latest" # Ensure you have a Dockerfile for this image
+    build: .
+    env_file:
+      - .env
+    ports:
+      - 80:8000
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+
+volumes:
+  db_data: # MySQL storage
+
+# networks:
+#   enet:
+#     driver: bridge
+#     ipam:
+#       config:
+#         - subnet: 172.16.0.0/24
