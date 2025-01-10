@@ -1,10 +1,13 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
-import mysql.connector
+import hashlib
 import json
 from datetime import datetime
-from django.contrib.sessions.models import Session 
-import hashlib
+import os
+
+import mysql.connector
+from django.contrib.sessions.models import Session
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
+
 class Node:
     def __init__(self, question, option1, option2, option3, option4, correct_answer):
         self.question = question
@@ -105,22 +108,17 @@ class DoublyLinkedList:
 
 
 class DatabaseOperations():
-    def __init__(self, dbname):
-        self.dbname = dbname
-
-    def getDBInfo(self):
-        return self.dbname
 
     def runQuery(self, query):
         try:
             connection = mysql.connector.connect(
-                host='localhost',
+                host= os.getenv('DATABASE_HOST'),
                 # host='btieyhs2jctv9vjozees-mysql.services.clever-cloud.com',
-                user='root',
+                user=os.getenv('DATABASE_USER'),
                 # user='ubkygkffztqf2iv8',
-                password='',
+                password=os.getenv('DATABASE_PASSWORD'),
                 # password='SR9NIRWMNhBnqVMATMqA',
-                database=self.dbname,
+                database=os.getenv('DATABASE_NAME'),
                 # database='btieyhs2jctv9vjozees',
             )
             cursor = connection.cursor()
@@ -141,7 +139,7 @@ def login(request):
     try:
         if request.method == 'POST':
             postData = request.POST
-            db = DatabaseOperations('examhub')
+            db = DatabaseOperations()
             entered_password = postData['exam_password']
             entered_username = postData['exam_username']
 
@@ -180,7 +178,7 @@ def login(request):
 
 
 def student_dashboard(request):
-    db = DatabaseOperations('examhub')
+    db = DatabaseOperations()
     try:
         username = request.session.get('username')
         auth_status = request.session.get(f'{username}_auth')
@@ -214,7 +212,7 @@ QuestionPaper = []
 
 def start_test(request):
     try:
-        db = DatabaseOperations('examhub')
+        db = DatabaseOperations()
         if request.method == 'POST':
             testcode = request.POST.get('testcode')
             request.session['testcode'] = testcode
@@ -398,7 +396,7 @@ def submitTest(request):
         global MarkWeight
         testcode = request.session.get('testcode')
         username = request.session.get('username')
-        db = DatabaseOperations('examhub')
+        db = DatabaseOperations()
         date_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
         total_of = MainQuiz.length * MarkWeight
@@ -490,7 +488,7 @@ def teacher_workspace(request):
 
 
 def view_test(request):
-    db = DatabaseOperations('examhub')
+    db = DatabaseOperations()
     if request.method == 'GET':
         a, b = db.runQuery('SELECT testcode from testcodes')
         ls = [i[0] for i in b]
@@ -526,7 +524,7 @@ def view_test(request):
 
 
 def view_result(request):
-    db = DatabaseOperations('examhub')
+    db = DatabaseOperations()
     if request.method == 'GET':
         a, b = db.runQuery('SELECT testcode from testcodes')
         ls = [i[0] for i in b]
@@ -562,7 +560,7 @@ def view_result(request):
 
 def user_control(request):
     try:
-        db = DatabaseOperations('examhub')
+        db = DatabaseOperations()
         a,b = db.runQuery('SELECT * FROM `examhub_auth`')
         if not a:
             raise Exception('Examhub: User Control Not Responding')
@@ -581,7 +579,7 @@ def user_control(request):
         return render(request, 'index.html', parms)
 
 def createUser(request):
-    db = DatabaseOperations('examhub')
+    db = DatabaseOperations()
     if request.method == 'POST':
         data = json.loads(request.body)
         newusername = data['uname']
@@ -592,7 +590,7 @@ def createUser(request):
 
 
 def deleteUser(request):
-    db = DatabaseOperations('examhub')
+    db = DatabaseOperations()
     if request.method == 'POST':
         data = json.loads(request.body)
         deluname = data['deluname']
@@ -602,7 +600,7 @@ def deleteUser(request):
 
 def create_test(request):
     try:
-        db = DatabaseOperations('examhub')
+        db = DatabaseOperations()
         a, b = db.runQuery('SELECT testcode from testcodes')
         ls = [i[0] for i in b]
 
@@ -620,7 +618,7 @@ def create_test(request):
 
 def create_new_test(request):
     try:
-        db = DatabaseOperations('examhub')
+        db = DatabaseOperations()
         if request.method == 'POST':
             data = json.loads(request.body)
             test_name = data['test_name']
@@ -653,7 +651,7 @@ def create_new_test(request):
 def edit_test(request):
     try:
         if request.method == 'POST':
-            db = DatabaseOperations('examhub')
+            db = DatabaseOperations()
             data = json.loads(request.body)
             test_id = data['edit_test_id']
             request.session['editing_test'] = test_id
@@ -666,7 +664,7 @@ def edit_test(request):
 
 def refresh_table(request):
     try:
-        db = DatabaseOperations('examhub')
+        db = DatabaseOperations()
         test_id = request.session.get('editing_test')
         a,b = db.runQuery(f"SELECT * FROM {test_id}")
         if a:
@@ -691,7 +689,7 @@ def add_new_question(request):
             opd = data['newD']
             crop = data['newCROP']
          
-            db = DatabaseOperations('examhub')
+            db = DatabaseOperations()
             test_id = request.session.get('editing_test')
             a,b = db.runQuery(f"INSERT INTO {test_id} values ('{ques}','{opa}','{opb}','{opc}','{opd}','{crop}')")
             return JsonResponse({'state':a})
@@ -707,7 +705,7 @@ def logout(request):
 
 def detailed_report(request):
     try:
-        db = DatabaseOperations('examhub')
+        db = DatabaseOperations()
         if request.method == 'POST':
             sid = request.POST.get('sid')
             testcode = request.session.get('view_test_code')

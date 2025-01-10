@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
+from dotenv import load_dotenv
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -73,13 +75,16 @@ WSGI_APPLICATION = 'ExamHub.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# Loads .env file
+load_dotenv()
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'examhub',
-        'HOST' : 'localhost',
-        'USER' : 'root',
-        'PASSWORD' : '',
+        'NAME': os.getenv('DATABASE_NAME'),
+        'HOST' : os.getenv('DATABASE_HOST'),
+        'USER' : os.getenv('DATABASE_USER'),
+        'PASSWORD' : os.getenv('DATABASE_PASSWORD'),
     }
 }
 

@@ -1,3 +1,4 @@
 django
 mysqlclient
 mysql-connector-python
+python-dotenv
