@@ -66,6 +66,24 @@ python manage.py runserver 127.0.0.1:8000
 
 Visit `http://127.0.0.1:8000` in your web browser
 
+## Docker
+
+- Make sure you have `docker` and `docker compose` installed.
+
+- Set up environment variables:
+
+```bash
+cp .env.example .env
+```
+
+- Edit the .env file with your database credentials and other configurations.
+
+- Run the following command to start the development environment with Docker:
+
+```bash
+docker compose up # Add `-d` to run in the background
+```
+
 ## Default Credentials
 
 admin account:
