@@ -1,0 +1,40 @@
+---
+services:
+  db:
+    container_name: mysql
+    image: "mysql:9.0.1"
+    env_file:
+      - .env
+    environment:
+      - MYSQL_DATABASE=${DATABASE_NAME}
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./examhub.sql:/docker-entrypoint-initdb.d/examhub.sql # import default data
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  app:
+    container_name: examhub
+    image: "examhub-${TARGET}"
+    build:
+      context: .
+      target: ${TARGET}
+    env_file:
+      - .env
+    ports:
+      - 8000:8000
+    volumes:      # comment / remove these
+      - .:/app    # two lines if using in production
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+
+volumes:
+  db_data: # Persistent MySQL storage
