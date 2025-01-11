@@ -31,3 +31,6 @@ venv/
 *.pid
 *.seed
 *.swp
+
+# LL POST
+Linkedin Post/
